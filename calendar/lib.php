@@ -2851,6 +2851,10 @@ function calendar_add_icalendar_event($event, $unused = null, $subscriptionid, $
     $eventrecord->location = empty($event->properties['LOCATION'][0]->value) ? '' :
             trim(str_replace('\\', '', $event->properties['LOCATION'][0]->value));
     $eventrecord->uuid = $event->properties['UID'][0]->value;
+    if (!isset($eventrecord->uuid)) {
+        $eventrecord->uuid = 1234; //Protects against UUID being 'null' and causing a database write error. not all ical files supply UUID. - Scrat
+    }
+
     $eventrecord->timemodified = time();
 
     // Add the iCal subscription details if required.
